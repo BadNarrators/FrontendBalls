@@ -180,7 +180,7 @@ for(i=0;i<numparticles;i++){ //FIXME: bruh this code is cancer, da fuck did I sm
 
 
 
-function drawPauseText(txt) { //TODO: implementarlo, cioè ci dovrebbe essere ben funzionante solo non implementato nel gioco per motivi di cheating
+function drawPauseText(txt) { //TODO: implementarlo, cioè ci dovrebbe essere ben funzionante solo non implementato nel gioco per motivi di cheating, forse c'è ancora come codice commentato
     if (pauseTimer >= 2) {
         ctx.font = "72px Impact";
         ctx.fillStyle = paddleColor;
