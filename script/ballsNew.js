@@ -3,13 +3,23 @@ var ctx = canvas.getContext("2d");
 var canvasRect = canvas.getBoundingClientRect();
 canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight);
 
+class Pos { //posizione
+    x = canvas.width/2;
+    y = canvas.height/2;
+
+    constructor(){}
+    constructor(posX, posY){
+        this.x = posX;
+        this.y = posY;
+    }
+}
 
 var gravity = 9.81;
-var vec = {
-    dx: 3,
-    dy: -3,
-    deg: 45,
-    str: 4.54,
+class Vec { //vettore di movimento
+    dx = 3;
+    dy = -3;
+    deg = 45;
+    str = 4.54;
     changeDeg(n) {
         olddy = this.dy;
         //console.log(this.deg+" "+n);
@@ -22,44 +32,31 @@ var vec = {
         this.dx = Math.sin(this.deg) * this.str;
         this.dy = Math.sqrt(this.str ** 2 - this.dx ** 2);
         if (olddy < 0) this.dy = -this.dy;
-    },
+    }
     sideBounce() {
-        //console.log("sidebounce");
         this.deg = -this.deg;
         this.changeDeg(0);
-    },
+    }
+    changeSpeed(n) {
+        this.str = n;
+        this.dx = Math.sin(this.deg) * this.str;
+        this.dy = Math.sqrt(this.str ** 2 - this.dx ** 2);
+    }
+    accelerationEffect(){
+    
+    }
     gravityEffect() {
 
     }
 }
 
-var ball = {
-    ballColor: "#ffb42e",
-    ballRadius: globalBallRadius
-    
+class Movement{ //movimento (la posizione e i vettori che la influenzano)
+    pos = new Pos();
+    vec = new Vec();
+
+    constructor(){};
 }
 
-var btn1 = document.getElementById("btn1");
-var btn2 = document.getElementById("btn2");
-var btn3 = document.getElementById("btn3");
-var btn4 = document.getElementById("btn4");
-
-var music;
-var isMusicPlaying = false;
-
-function randSong() {
-    var songs = [
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3"
-    ];
-    return songs[Math.floor(Math.random() * songs.length)];
-}
 
 var ballColor = "#ffb42e";
 var scoreboardColor = "#663399";
@@ -97,15 +94,56 @@ function randColor() {
 
 var globalBallRadius = canvas.width / 70;
 
-var x = canvas.width / 2;
-var y = canvas.height - 30;
-var dx = 2;
-var dy = -2;
+class Ball {
+    ballColor = randColor();
+    ballRadius = globalBallRadius;
+    mov = new Movement();
+
+    constructor(){
+        this.mov.vec.dx = 2;
+        this.mov.vec.dy = -2;
+    }
+
+    drawBall(context) {
+        context.beginPath();
+        context.arc(this.mov.x, this.mov.y, this.ballRadius, 0, Math.PI * 2);
+        context.fillStyle = ballColor;
+        context.fill();
+        context.closePath();
+    }
+    resetBall() {
+        this.mov.pos.x += this.mov.vec.dx;
+        this.mov.pos.y += this.mov.vec.dy;
+        drawBall();
+        this.mov.pos.x = canvas.width / 2;
+        this.mov.pos.y = canvas.height - 30;
+        var n = Math.random() * (4);
+        switch (n) {
+            case 0:
+                this.mov.vec.deg = 0;
+                break;
+            case 1:
+                this.mov.vec.deg = -45;
+                break;
+            case 2:
+                this.mov.vec.deg = -20;
+                break;
+            case 3:
+                this.mov.vec.deg = 20;
+                break;
+            case 4:
+                this.mov.vec.deg = 45;
+                break;
+        }
+        this.mov.vec.dy = -1;
+        this.mov.vec.changeDeg(0);
+    }
+}
+
 var isLevelDisplayed = false;
 var pauseTimer = 0;
 var pauseTimerMax = 120;
 var pauseText = "PAUSE";
-
 
 
 var rbColor = randColor();
@@ -134,22 +172,15 @@ for(i=0;i<numparticles;i++){
 	};
 }
 
-function collisionDetection() {
+function collisionDetection(ball) {
     if (x > canvas.width - globalBallRadius || x < globalBallRadius) {
-        vec.sideBounce();
+        ball.mov.vec.sideBounce();
     }
     if (y <= globalBallRadius || y >= canvas.height - globalBallRadius) {
-        vec.dy = -vec.dy;
+        ball.mov.vec.dy = -(ball.mov.vec.dy);
     }
 }
 
-function drawBall() {
-    ctx.beginPath();
-    ctx.arc(x, y, globalBallRadius, 0, Math.PI * 2);
-    ctx.fillStyle = ballColor;
-    ctx.fill();
-    ctx.closePath();
-}
 
 function drawPauseText(txt) {
     if (pauseTimer >= 2) {
@@ -179,34 +210,6 @@ function drawParticles() {
     //console.log("B: "+particles[1].x+" "+particles[1].y+" "+particles[1].status);
 }
 
-function resetBall() {
-    x += vec.dx;
-    y += vec.dy;
-    drawBall();
-    x = canvas.width / 2;
-    y = canvas.height - 30;
-    var n = Math.random() * (4);
-    switch (n) {
-        case 0:
-            vec.deg = 0;
-            break;
-        case 1:
-            vec.deg = -45;
-            break;
-        case 2:
-            vec.deg = -20;
-            break;
-        case 3:
-            vec.deg = 20;
-            break;
-        case 4:
-            vec.deg = 45;
-            break;
-    }
-    vec.dy = -1;
-    vec.changeDeg(0);
-    paddleX = (canvas.width - paddleWidth) / 2;
-}
 
 function drawRainbowBall() {
     ctx.beginPath();
@@ -246,7 +249,7 @@ function gameOverScreen() {
     ctx.textAlign = "center";
     ctx.fillText("(Only alphanumeric values are accepted)", canvas.width / 2, canvas.height - 100);
 
-    if (detectmob()) {
+    if (detectMobile()) {
         if (!isInputDone) {
             savingName = window.prompt("Insert your nickname");
             isInputDone = true;
@@ -259,7 +262,7 @@ function gameOverScreen() {
     //console.log("x:"+rbx+" y:"+rby);
 }
 
-function detectmob() {
+function detectMobile() {
     if (navigator.userAgent.match(/Android/i) ||
         navigator.userAgent.match(/webOS/i) ||
         navigator.userAgent.match(/iPhone/i) ||
@@ -327,6 +330,29 @@ function manageMusic(){
         music.play();
     }
     isMusicPlaying = !isMusicPlaying;
+}
+
+
+var btn1 = document.getElementById("btn1");
+var btn2 = document.getElementById("btn2");
+var btn3 = document.getElementById("btn3");
+var btn4 = document.getElementById("btn4");
+
+var music;
+var isMusicPlaying = false;
+
+function randSong() {
+    var songs = [
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3"
+    ];
+    return songs[Math.floor(Math.random() * songs.length)];
 }
 
 btn1.addEventListener("click", function() {
