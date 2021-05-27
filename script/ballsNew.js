@@ -3,6 +3,8 @@ var ctx = canvas.getContext("2d");
 var canvasRect = canvas.getBoundingClientRect();
 canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight);
 
+var globalBallRadius = canvas.width / 70;
+var textColor = "#663399"; //colore di eventuale testo/UI
 class Pos { //posizione
     x = canvas.width/2;
     y = canvas.height/2;
@@ -14,7 +16,7 @@ class Pos { //posizione
     }
 }
 
-var gravity = 9.81;
+var gravity = 9.81; //TODO: inserirlo in automatico nella classe movement/vec oppure dargli una funzione per poterlo cambiare?
 class Vec { //vettore di movimento
     dx = 3;
     dy = -3;
@@ -50,51 +52,45 @@ class Vec { //vettore di movimento
     }
 }
 
-class Movement{ //movimento (la posizione e i vettori che la influenzano)
+class Movement{ //movimento (l'insieme della posizione e i vettori che la influenzano) ??IS THIS NECESSARY??
     pos = new Pos();
     vec = new Vec();
 
     constructor(){};
 }
 
-
-var ballColor = "#ffb42e";
-var scoreboardColor = "#663399";
-
-function randColor() {
-    var colors = [
-        "#DC143C",
-        "#FF69B4",
-        "#C71585",
-        "#FF4500",
-        "#FFA500",
-        "#FFFF00",
-        "#EE82EE",
-        "#9370DB",
-        "#9400D3",
-        "#8B008B",
-        "#6A5ACD",
-        "#7B68EE",
-        "#00FA9A",
-        "#008000",
-        "#66CDAA",
-        "#008B8B",
-        "#00FFFF",
-        "#6495ED",
-        "#ffb42e",
-        "#71e3bf",
-        "#bb6891",
-        "#278bae",
-        "#9b0030",
-        "#2ff055",
-        "#f8cc0e"
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
+var colorList = [ //lista di colori
+    "#DC143C",
+    "#FF69B4",
+    "#C71585",
+    "#FF4500",
+    "#FFA500",
+    "#FFFF00",
+    "#EE82EE",
+    "#9370DB",
+    "#9400D3",
+    "#8B008B",
+    "#6A5ACD",
+    "#7B68EE",
+    "#00FA9A",
+    "#008000",
+    "#66CDAA",
+    "#008B8B",
+    "#00FFFF",
+    "#6495ED",
+    "#ffb42e",
+    "#71e3bf",
+    "#bb6891",
+    "#278bae",
+    "#9b0030",
+    "#2ff055",
+    "#f8cc0e"
+];
+function randColor() { //funzione per generare colore random
+    return colorList[Math.floor(Math.random() * colorList.length)];
 }
 
-var globalBallRadius = canvas.width / 70;
-
-class Ball {
+class Ball { //classe della singola palla
     ballColor = randColor();
     ballRadius = globalBallRadius;
     mov = new Movement();
@@ -138,21 +134,31 @@ class Ball {
         this.mov.vec.dy = -1;
         this.mov.vec.changeDeg(0);
     }
+    collisionDetection(){
+        if (this.mov.pos.x > canvas.width - ballRadius || this.mov.pos.x < ballRadius) {
+            this.mov.vec.sideBounce();
+        }
+        if (this.mov.pos.y <= ballRadius || this.mov.pos.y >= canvas.height - ballRadius) {
+            this.mov.vec.dy = -(this.mov.vec.dy);
+        }
+    }
 }
 
-var isLevelDisplayed = false;
+var ballsList = []; //lista delle palle
+
+var isLevelDisplayed = false; //FIXME: what is this for? need to know and comment
 var pauseTimer = 0;
 var pauseTimerMax = 120;
 var pauseText = "PAUSE";
 
 
-var rbColor = randColor();
+var rbColor = randColor(); //TODO: rimuovere tutti sti residui della rainbowball originale (ma prima vedere di importarli?)
 var rbColorStatus = 0;
 
 var maxParticleRange=40;
 var particles=[];
 var numparticles=200;
-for(i=0;i<numparticles;i++){
+for(i=0;i<numparticles;i++){ //FIXME: bruh this code is cancer, da fuck did I smoke when I was 16?
 	//particles.push(particle.create(width/2,height/2,(Math.random()*10)+1,Math.random()*Math.PI*2))
 	particles[i]={
 		x: 0,
@@ -172,17 +178,9 @@ for(i=0;i<numparticles;i++){
 	};
 }
 
-function collisionDetection(ball) {
-    if (x > canvas.width - globalBallRadius || x < globalBallRadius) {
-        ball.mov.vec.sideBounce();
-    }
-    if (y <= globalBallRadius || y >= canvas.height - globalBallRadius) {
-        ball.mov.vec.dy = -(ball.mov.vec.dy);
-    }
-}
 
 
-function drawPauseText(txt) {
+function drawPauseText(txt) { //TODO: implementarlo, cioè ci dovrebbe essere ben funzionante solo non implementato nel gioco per motivi di cheating
     if (pauseTimer >= 2) {
         ctx.font = "72px Impact";
         ctx.fillStyle = paddleColor;
@@ -194,7 +192,7 @@ function drawPauseText(txt) {
     }
 }
 
-function drawParticles() {
+function drawParticles() { //possibili usi delle particelle?
     for (i = 0; i < numparticles; i++) {
         var p = particles[i];
         if (p.status != 0) {
@@ -211,7 +209,7 @@ function drawParticles() {
 }
 
 
-function drawRainbowBall() {
+function drawRainbowBall() {  //TODO: to implement in standard ball/extends default ball?
     ctx.beginPath();
     ctx.arc(rbx, rby, globalBallRadius * 2, 0, Math.PI * 2);
     ctx.fillStyle = rbColor;
@@ -224,16 +222,6 @@ function drawRainbowBall() {
     ctx.closePath();
     rbx += vrbx;
     rby += vrby;
-}
-
-function rainbowBallCollision() {
-    (x > canvas.width - globalBallRadius || x < globalBallRadius)
-    if (rbx < globalBallRadius * 2 || rbx > canvas.width - globalBallRadius * 2) {
-        vrbx = -vrbx;
-    }
-    if (rby - globalBallRadius * 2 < 0 || rby + globalBallRadius * 2 > canvas.height) {
-        vrby = -vrby;
-    }
 }
 
 function gameOverScreen() {
@@ -277,6 +265,11 @@ function detectMobile() {
     }
 }
 
+function initialization(){
+    ballsList.push(new Ball());
+    draw();
+}
+
 function draw() {
     //if (!isLevelDisplayed) createLevel();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -291,13 +284,20 @@ function draw() {
         //preShake();
         drawPauseText(pauseText);
         //drawBricks();
-        drawBall();
+        ballsList.forEach(ball => {
+            ball.drawBall();
+            if(pauseTimer == 0){
+                ball.collisionDetection();
+                ball.move();
+            }
+        });
+        //drawBall();
         //drawPaddle();
         drawParticles();
         //drawScore();
         //drawLives();
         //drawLevel();
-        collisionDetection();
+        //collisionDetection();
         //console.log(pauseTimer+" "+bricksHit+" "+bricksTot);
 
         /*if (rightPressed && paddleX < canvas.width - paddleWidth && isUsingKeyboard) {
@@ -305,12 +305,9 @@ function draw() {
         } else if (leftPressed && paddleX > 0 && isUsingKeyboard) {
             paddleX -= paddleSpeed;
         }*/
-        if (pauseTimer == 0) {
-            x += vec.dx;
-            y += vec.dy;
-        } else if (pauseTimer == -1) {
+        if (pauseTimer == -1) {
             //difficultyIncrease();
-            pauseTimer = 0;
+            pauseTimer = 0; //FIXME: WTF is this for????
             pauseText = "PAUSE";
         }
     //}
