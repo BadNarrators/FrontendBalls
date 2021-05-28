@@ -8,12 +8,6 @@ var textColor = "#663399"; //colore di eventuale testo/UI
 class Pos { //posizione
     x = canvas.width/2;
     y = canvas.height/2;
-
-    constructor(){}
-    constructor(posX, posY){
-        this.x = posX;
-        this.y = posY;
-    }
 }
 
 var gravity = 9.81; //TODO: inserirlo in automatico nella classe movement/vec oppure dargli una funzione per poterlo cambiare?
@@ -23,7 +17,7 @@ class Vec { //vettore di movimento
     deg = 45;
     str = 4.54;
     changeDeg(n) {
-        olddy = this.dy;
+        let olddy = this.dy;
         //console.log(this.deg+" "+n);
         if (this.deg < 55 && this.deg > -55 && n != 0) {
             if ((this.deg < 0 && this.deg + n < 0) || (this.deg > 0 && this.deg + n > 0))
@@ -55,8 +49,6 @@ class Vec { //vettore di movimento
 class Movement{ //movimento (l'insieme della posizione e i vettori che la influenzano) ??IS THIS NECESSARY??
     pos = new Pos();
     vec = new Vec();
-
-    constructor(){};
 }
 
 var colorList = [ //lista di colori
@@ -102,8 +94,8 @@ class Ball { //classe della singola palla
 
     drawBall(context) {
         context.beginPath();
-        context.arc(this.mov.x, this.mov.y, this.ballRadius, 0, Math.PI * 2);
-        context.fillStyle = ballColor;
+        context.arc(this.mov.pos.x, this.mov.pos.y, this.ballRadius, 0, Math.PI * 2);
+        context.fillStyle = this.ballColor;
         context.fill();
         context.closePath();
     }
@@ -134,11 +126,15 @@ class Ball { //classe della singola palla
         this.mov.vec.dy = -1;
         this.mov.vec.changeDeg(0);
     }
+    move(){
+        this.mov.pos.x += this.mov.vec.dx;
+        this.mov.pos.y += this.mov.vec.dy;
+    }
     collisionDetection(){
-        if (this.mov.pos.x > canvas.width - ballRadius || this.mov.pos.x < ballRadius) {
+        if (this.mov.pos.x > canvas.width - this.ballRadius || this.mov.pos.x < this.ballRadius) {
             this.mov.vec.sideBounce();
         }
-        if (this.mov.pos.y <= ballRadius || this.mov.pos.y >= canvas.height - ballRadius) {
+        if (this.mov.pos.y <= this.ballRadius || this.mov.pos.y >= canvas.height - this.ballRadius) {
             this.mov.vec.dy = -(this.mov.vec.dy);
         }
     }
@@ -285,7 +281,7 @@ function draw() {
         drawPauseText(pauseText);
         //drawBricks();
         ballsList.forEach(ball => {
-            ball.drawBall();
+            ball.drawBall(ctx);
             if(pauseTimer == 0){
                 ball.collisionDetection();
                 ball.move();
@@ -294,6 +290,7 @@ function draw() {
         //drawBall();
         //drawPaddle();
         drawParticles();
+
         //drawScore();
         //drawLives();
         //drawLevel();
