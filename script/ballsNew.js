@@ -5,7 +5,7 @@ canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight);
 
 var globalBallRadius = canvas.width / 70;
 var textColor = "#663399"; //colore di eventuale testo/UI
-class Pos { //posizione
+class Pos { //posizione 
     x = canvas.width/2;
     y = canvas.height/2;
 }
