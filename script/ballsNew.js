@@ -315,6 +315,10 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
+function newBall(){
+    ballsList.push(new Ball());
+}
+
 function manageMusic(){
     if(isMusicPlaying)
         music.pause();
@@ -354,5 +358,8 @@ btn1.addEventListener("click", function() {
 });
 btn2.addEventListener("click", function() {
     manageMusic();
+});
+btn3.addEventListener("click", function() {
+    newBall();
 });
 
