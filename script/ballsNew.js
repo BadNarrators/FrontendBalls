@@ -5,6 +5,7 @@ canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight);
 
 var globalBallRadius = canvas.width / 70;
 var textColor = "#663399"; //colore di eventuale testo/UI
+var changeOnBounce = true;
 class Pos { //posizione 
     x = canvas.width/2;
     y = canvas.height/2;
@@ -79,7 +80,8 @@ var colorList = [ //lista di colori
     "#f8cc0e"
 ];
 function randColor() { //funzione per generare colore random
-    return colorList[Math.floor(Math.random() * colorList.length)];
+    //return colorList[Math.floor(Math.random() * colorList.length)]; //questo prende random dalla lista
+    return Math.floor(Math.random()*16777215).toString(16); //questo prende random al 100%
 }
 
 class Ball { //classe della singola palla
@@ -97,6 +99,9 @@ class Ball { //classe della singola palla
         context.arc(this.mov.pos.x, this.mov.pos.y, this.ballRadius, 0, Math.PI * 2);
         context.fillStyle = this.ballColor;
         context.fill();
+        /*context.font = this.ballRadius+"px Arial";
+        ctx.textAlign = "center";
+        context.fillText("DVD", this.mov.pos.x, this.mov.pos.y);*/
         context.closePath();
     }
     resetBall() {
@@ -133,17 +138,19 @@ class Ball { //classe della singola palla
     collisionDetection(){
         if (this.mov.pos.x > canvas.width - this.ballRadius || this.mov.pos.x < this.ballRadius) {
             this.mov.vec.sideBounce();
+            if(changeOnBounce) this.ballColor = randColor();
         }
         if (this.mov.pos.y <= this.ballRadius || this.mov.pos.y >= canvas.height - this.ballRadius) {
             this.mov.vec.dy = -(this.mov.vec.dy);
+            if(changeOnBounce) this.ballColor = randColor();
         }
     }
 }
 
 var ballsList = []; //lista delle palle
 
-var isLevelDisplayed = false; //FIXME: what is this for? need to know and comment
-var pauseTimer = 0;
+var isLevelDisplayed = false; //FIXME: what is this for? need to know and comment / I think this was to know if I needed to print the level, I will confirm and remove if so
+var pauseTimer = 0; //this bunch will be useful to integrate a pause system, even tho it should be modified
 var pauseTimerMax = 120;
 var pauseText = "PAUSE";
 
