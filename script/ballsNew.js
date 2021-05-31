@@ -3,8 +3,12 @@ var ctx = canvas.getContext("2d");
 var canvasRect = canvas.getBoundingClientRect();
 canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight);
 
+var checkBallsHitBox = true;
+
 var globalBallRadius = canvas.width / 70;
 var textColor = "#663399"; //colore di eventuale testo/UI
+
+var ballsList = []; //lista delle palle
 class Pos { //posizione 
     x = canvas.width/2;
     y = canvas.height/2;
@@ -29,20 +33,24 @@ class Vec { //vettore di movimento
         this.dy = Math.sqrt(this.str ** 2 - this.dx ** 2);
         if (olddy < 0) this.dy = -this.dy;
     }
-    sideBounce() {
-        this.deg = -this.deg;
+    xBounce() {
+        this.deg = -this.deg + (Math.random() * 20) - 10;
         this.changeDeg(0);
+    }
+    yBounce() { //FIXME: this is theoretical code, not working tho. Have to control changeDeg(x) function to check why doesn't this work like it should
+        this.dy = -(this.dy)
+        //this.changeDeg((Math.random() * 20) - 10);
     }
     changeSpeed(n) {
         this.str = n;
         this.dx = Math.sin(this.deg) * this.str;
         this.dy = Math.sqrt(this.str ** 2 - this.dx ** 2);
     }
-    accelerationEffect(){
-    
+    accelerationEffect(s){ //FIXME: questo fixa il problema di yBounce (WTF) capire perchè e soprattutto cosa ho sbagliato nella vita per fidarmi di codice fatto da un adolescente
+        this.str = s;
+        this.changeDeg(0);
     }
-    gravityEffect() {
-
+    applyGravity() {
     }
 }
 
@@ -132,15 +140,18 @@ class Ball { //classe della singola palla
     }
     collisionDetection(){
         if (this.mov.pos.x > canvas.width - this.ballRadius || this.mov.pos.x < this.ballRadius) {
-            this.mov.vec.sideBounce();
+            this.mov.vec.xBounce();
         }
         if (this.mov.pos.y <= this.ballRadius || this.mov.pos.y >= canvas.height - this.ballRadius) {
             this.mov.vec.dy = -(this.mov.vec.dy);
         }
+        if(checkBallsHitBox){
+            ballsList.forEach(b => {
+                //insert here code for checking if balls hit each other, sorry but I am too drunk atm
+            });
+        }
     }
 }
-
-var ballsList = []; //lista delle palle
 
 var isLevelDisplayed = false; //FIXME: what is this for? need to know and comment
 var pauseTimer = 0;
@@ -285,12 +296,12 @@ function draw() {
             if(pauseTimer == 0){
                 ball.collisionDetection();
                 ball.move();
+                ball.mov.vec.applyGravity();
             }
         });
         //drawBall();
         //drawPaddle();
         drawParticles();
-
         //drawScore();
         //drawLives();
         //drawLevel();
@@ -361,5 +372,8 @@ btn2.addEventListener("click", function() {
 });
 btn3.addEventListener("click", function() {
     newBall();
+    ballsList.forEach(b => {
+        b.mov.vec.accelerationEffect(2);
+    });
 });
 
