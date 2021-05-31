@@ -1,11 +1,12 @@
 var canvas = document.getElementById("cnvs");
 var ctx = canvas.getContext("2d");
 var canvasRect = canvas.getBoundingClientRect();
-canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight); //se si commenta questo il risultato varia ma è sempre sbagliato
+canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight);
 
 var globalBallRadius = canvas.width / 70;
 var textColor = "#663399"; //colore di eventuale testo/UI
 var changeOnBounce = true;
+var showBallNum = true;
 class Pos { //posizione 
     x = canvas.width/2;
     y = canvas.height/2;
@@ -270,8 +271,16 @@ function detectMobile() {
     }
 }
 
+function printBallNumber(){
+    ctx.font = "30px Impact";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.textAlign = "left";
+    ctx.fillText("Balls N°:", 20, 40);
+    ctx.fillText(ballsList.length, 165, 40);
+}
+
 function initialization(){
-    ballsList.push(new Ball());
+    //ballsList.push(new Ball(canvas.width/2, canvas.height/2));
     draw();
 }
 
@@ -299,6 +308,8 @@ function draw() {
         //drawBall();
         //drawPaddle();
         drawParticles();
+
+        if(showBallNum) printBallNumber();
 
         //drawScore();
         //drawLives();
@@ -363,8 +374,9 @@ function randSong() {
 }
 
 canvas.addEventListener("click", function(event){
-    let x = event.clientX;
-    let y = event.clientY;
+    var rect = event.target.getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
     newBall(x, y)
 });
 
