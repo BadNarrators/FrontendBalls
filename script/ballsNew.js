@@ -1,7 +1,7 @@
 var canvas = document.getElementById("cnvs");
 var ctx = canvas.getContext("2d");
 var canvasRect = canvas.getBoundingClientRect();
-canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight);
+canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight); //se si commenta questo il risultato varia ma è sempre sbagliato
 
 var globalBallRadius = canvas.width / 70;
 var textColor = "#663399"; //colore di eventuale testo/UI
@@ -89,7 +89,9 @@ class Ball { //classe della singola palla
     ballRadius = globalBallRadius;
     mov = new Movement();
 
-    constructor(){
+    constructor(x, y){
+        this.mov.pos.x = x;
+        this.mov.pos.y = y;
         this.mov.vec.dx = 2;
         this.mov.vec.dy = -2;
     }
@@ -322,8 +324,8 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-function newBall(){
-    ballsList.push(new Ball());
+function newBall(x, y){
+    ballsList.push(new Ball(x, y));
 }
 
 function manageMusic(){
@@ -360,6 +362,12 @@ function randSong() {
     return songs[Math.floor(Math.random() * songs.length)];
 }
 
+canvas.addEventListener("click", function(event){
+    let x = event.clientX;
+    let y = event.clientY;
+    newBall(x, y)
+});
+
 btn1.addEventListener("click", function() {
     ballColor = randColor();
 });
@@ -367,6 +375,6 @@ btn2.addEventListener("click", function() {
     manageMusic();
 });
 btn3.addEventListener("click", function() {
-    newBall();
+    newBall(canvas.width/2, canvas.height/2);
 });
 
