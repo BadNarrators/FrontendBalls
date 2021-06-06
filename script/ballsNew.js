@@ -374,9 +374,11 @@ function randSong() {
 }
 
 canvas.addEventListener("click", function(event){
-    var rect = event.target.getBoundingClientRect();
+    let rect = canvas.getBoundingClientRect();
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
+    console.log("Coordinate x: " + x, 
+                        "Coordinate y: " + y);
     newBall(x, y)
 });
 
@@ -387,6 +389,6 @@ btn2.addEventListener("click", function() {
     manageMusic();
 });
 btn3.addEventListener("click", function() {
-    newBall(canvas.width/2, canvas.height/2);
+    showBallNum = !showBallNum;
 });
 
