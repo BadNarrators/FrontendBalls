@@ -1,0 +1,124 @@
+body{
+  background-image: url("https://ak.picdn.net/shutterstock/videos/1456672/thumb/1.jpg");
+}
+
+#myCanvas{
+  background-color: aquamarine;
+  margin-top: 100px;
+  margin-left: 150px;
+  margin-right: 150px;
+  height: 500px;
+  width: 500px;
+  border: 10px solid black;
+  
+
+
+}
+.button{
+  
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  
+
+}
+
+.button:hover {
+  background-color: #3e8e41;
+}
+
+div{
+  margin-left: 150px;
+  margin-right: 150px;
+}
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="500" height="500" style="border:1px solid #d3d3d3;">Your browser does not support the HTML5 canvas tag.
+
+
+
+
+
+
+
+
+
+
+</canvas>
+
+<div>
+ <input class = "button" type="submit" value="Submit">
+  <input  class = "button" type="submit" value="Submit">
+   <input  class = "button" type="submit" value="Submit">
+    <input  class = "button" type="submit" value="Submit">
+
+  </div>
+
+<script>
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+
+var step=3;
+
+var dot = {
+    x:30,
+    y:0,
+    velX:6,
+    velY:7
+};
+
+function clearDot() {
+     ctx.clearRect(0,0,500,500);   
+}
+
+function paintDot() {
+    ctx.strokeStyle = "red";
+    ctx.fillStyle="red";
+    ctx.beginPath();
+    ctx.arc(dot.x,dot.y,10,0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+}
+
+function move() {
+    // update position
+    
+    if (dot.y>=100){
+        step=-1
+    }
+    if (dot.y<1)
+    step=1;
+    clearDot();
+    
+    /*if (dot.y=0){
+        step=1;
+    }*/
+    
+    ;
+    dot.x = dot.x ;//+ 10;//dot.velX;
+    dot.y = dot.y + step//dot.velY;
+    paintDot();
+}
+
+paintDot(); // disegna il pallino all'inizio
+setInterval(move, 10); // lancia la funzione move ogni 100ms
+
+</script>
+
+</body>
+</html>
