@@ -73,13 +73,21 @@ div{
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
-var step=3;
+var stepx=3;
+var stepy=3;
 
 var dot = {
     x:30,
     y:0,
     velX:6,
     velY:7
+};
+
+var dot2 = {
+    x:80,
+    y:0,
+    velX:12,
+    velY:16
 };
 
 function clearDot() {
@@ -95,28 +103,63 @@ function paintDot() {
     ctx.stroke();
 }
 
+function paintDot2() {
+    ctx.strokeStyle = "green";
+    ctx.fillStyle="green";
+    ctx.beginPath();
+    ctx.arc(dot2.x,dot2.y,10,0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+}
+
 function move() {
     // update position
     
-    if (dot.y>=100){
-        step=-1
+    if (dot.y >= 500 || dot.x > 500 ){
+        stepx=-2;
+        stepy=-1;
+        
     }
-    if (dot.y<1)
-    step=1;
+    if (dot.y<-8 || dot.x<0.5 )
+   { stepx = 1;
+    stepy = 2;
+   } 
+    clearDot();
+    dot.x = dot.x + stepx ;//+ 10;//dot.velX;
+    dot.y = dot.y + stepy//dot.velY;
+    paintDot();
+    
+    
+}
+
+function move2() {
+    // update position
+    
+    if (dot2.y>500 || dot2.x >= 500){
+        step=-2
+    }
+    if (dot2.y<1)
+    step=2;
     clearDot();
     
-    /*if (dot.y=0){
+    /*if (dot2.y=0){
         step=1;
     }*/
     
     ;
-    dot.x = dot.x ;//+ 10;//dot.velX;
-    dot.y = dot.y + step//dot.velY;
-    paintDot();
+    dot2.x = dot2.x + step ;//+ 10;//dot.velX;
+    dot2.y = dot2.y + step//dot.velY;
+   
+    paintDot2();
+   
+    
+    
 }
 
-paintDot(); // disegna il pallino all'inizio
-setInterval(move, 10); // lancia la funzione move ogni 100ms
+ paintDot();
+ paintDot2(); // disegna il pallino all'inizio
+
+setInterval(move, 10); // lancia la funzione move2 ogni 100ms
 
 </script>
 
