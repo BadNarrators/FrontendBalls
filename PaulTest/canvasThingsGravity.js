@@ -10,15 +10,20 @@ var mouse = {
 }
 
 var colorArray = [
-    '#ffaa33',
-    '#99ffaa',
-    '#00ff00',
-    '#4411aa',
-    '#ff1100'
+    "#EF597B",
+    "#FF6D31",
+    "#73B66B", 
+    "#FFCB18", 
+    "#29A2C6"
 ];
 
-var gravity = 0.3;
-var friction = 0.9;
+var gravity = 0.9;
+var bouncyness = 0.8;
+var radius = 25;
+var color = 0;
+
+
+var circleArray = [];
 
 // qui questa non fa nulla
 window.addEventListener('mousemove', function(event) {
@@ -31,11 +36,6 @@ window.addEventListener('resize', function() {
     canvas.height = innerHeight;
     init();
 })
-
-
-addEventListener("click", function(event) {
-	init();
-});
 
 //math functions for random values
 function randomIntFromRange(min,max) {
@@ -52,7 +52,11 @@ function Circle(x,y,dx,dy,radius){
     this.dx = dx;
     this.dy = dy;
     this.radius = radius;
-    this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
+    this.color;
+    if(color == 0)
+        this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
+    else
+        this.color = colorArray[color-1];
 
     this.draw = function(){
         c.beginPath();
@@ -66,16 +70,16 @@ function Circle(x,y,dx,dy,radius){
 
 
     this.update = function() {
-		if (this.y + this.radius + this.dy> canvas.height) {
+		if (this.y + this.radius + this.dy> canvas.height || this.y - this.radius + this.dy <= 0) {
 			this.dy = -this.dy;
-			this.dy = this.dy * friction;
-			this.dx = this.dx * friction;
+			this.dy = this.dy * bouncyness;
+			this.dx = this.dx * bouncyness;
 		} else {
 			this.dy += gravity;
 		}
 
 		if (this.x + this.radius >= canvas.width || this.x - this.radius <= 0) {
-			this.dx = -this.dx * friction;
+			this.dx = -this.dx * bouncyness;
 		}
 
 		this.x += this.dx;
@@ -84,19 +88,63 @@ function Circle(x,y,dx,dy,radius){
 	};
 }
 
+function createBall(x, y){
+    var rad = radius + Math.random() * 10 - Math.random() * 10; 
+    if(rad < 1) rad = 1;
+    var dx = (Math.random() -0.5) * 8; //velocity of the circle and startpointX
+    var dy = (Math.random() -0.5) * 8; //velocity of the circle and startpointY
+    circleArray.push(new Circle(x,y,dx,dy,rad));
+}
+function createBallWithDirection(x, y, dx, dy){
+    var rad = radius + Math.random() * 10 - Math.random() * 10; 
+    if(rad < 1) rad = 1;
+    var ball = new Circle(x,y,dx,dy,rad)
+    circleArray.push(ball);
+}
 
-var circleArray = [];
+/*canvas.addEventListener("click", function(event){
+    let rect = canvas.getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+    createBall(x, y)
+});*/
+
+var tempX, tempY, lastX, interval;
+
+function dragTick(){
+    dx = (tempX - lastX) / 5;
+    createBallWithDirection(tempX, tempY, dx, 0);
+    lastX = tempX;
+    console.log("test")
+};
+
+canvas.addEventListener("mousedown", function(event){
+    let rect = canvas.getBoundingClientRect();
+    lastX = event.clientX - rect.left;
+    interval = setInterval(dragTick, 50)
+});
+
+canvas.addEventListener("mousemove", function(event){
+    let rect = canvas.getBoundingClientRect();
+    tempX = event.clientX - rect.left;
+    tempY = event.clientY - rect.top;
+    if(event.which != 1) clearInterval(interval);
+});
+
+canvas.addEventListener("mouseup", function(event){
+    clearInterval(interval);
+});
+
 
 function init() {
 
     circleArray = [];
-    for(var i = 0; i < 666; i++){
-        var radius = Math.random() * 10 + 1; 
+    for(var i = 0; i < 50; i++){
         var x = randomIntFromRange(radius, canvas.width - radius);
-        var y = randomIntFromRange(0, canvas.height - radius);
+        var y = randomIntFromRange(radius, canvas.height - radius);
         var dx = (Math.random() -0.5) * 8; //velocity of the circle and startpointX
         var dy = (Math.random() -0.5) * 8; //velocity of the circle and startpointY
-        circleArray.push(new Circle(x,y,dx,dy,radius));
+        createBall(x, y, dx, dy)
         
     }
 }
@@ -107,6 +155,107 @@ function animate(){
  
     for(var i = 0; i < circleArray.length; i++){
         circleArray[i].update();
+    }
+    
+    c.beginPath();
+    c.arc(canvas.width/2, -10, 70, 0, Math.PI, false);
+    c.closePath();
+    c.lineWidth = 5;
+    c.fillStyle = 'white';
+    c.fill();
+    c.strokeStyle = '#222255';
+    c.stroke();
+
+    c.lineWidth = 1;
+    c.font = "30px Arial";
+    c.fillStyle = "#222255";
+    c.textAlign = "center";
+    c.fillText(""+circleArray.length, canvas.width/2, 30);
+}
+
+var rainbowInterval = setInterval(function(){
+    let n = Math.round(Math.random()*4+1);
+    
+    switch(n){
+        case 1:
+            colorSlider.className = "slider pink";
+            break;
+        case 2:
+            colorSlider.className = "slider orange";
+            break;
+        case 3:
+            colorSlider.className = "slider green";
+            break;
+        case 4:
+            colorSlider.className = "slider yellow";
+            break;
+        case 5:
+            colorSlider.className = "slider blue";
+            break;
+    }
+}, 200);
+
+var gravitySlider = document.getElementById("gravity");
+var bouncynessSlider = document.getElementById("bouncyness");
+var radiusSlider = document.getElementById("radius");
+var colorSlider = document.getElementById("color");
+
+gravitySlider.oninput = function(){
+    gravity = gravitySlider.value/100;
+}
+bouncynessSlider.oninput = function(){
+    bouncyness = bouncynessSlider.value/100;
+}
+radiusSlider.oninput = function(){
+    radius = radiusSlider.value/2;
+}
+colorSlider.oninput = function(){
+    color = colorSlider.value;
+    switch(color){
+        case '1':
+            colorSlider.className = "slider pink";
+            clearInterval(rainbowInterval);
+            break;
+        case '2':
+            colorSlider.className = "slider orange";
+            clearInterval(rainbowInterval);
+            break;
+        case '3':
+            colorSlider.className = "slider green";
+            clearInterval(rainbowInterval);
+            break;
+        case '4':
+            colorSlider.className = "slider yellow";
+            clearInterval(rainbowInterval);
+            break;
+        case '5':
+            colorSlider.className = "slider blue";
+            clearInterval(rainbowInterval);
+            break;
+        case '0':
+            colorSlider.className = "slider";
+            rainbowInterval = setInterval(function(){
+                let n = Math.round(Math.random()*4+1);
+                
+                switch(n){
+                    case 1:
+                        colorSlider.className = "slider pink";
+                        break;
+                    case 2:
+                        colorSlider.className = "slider orange";
+                        break;
+                    case 3:
+                        colorSlider.className = "slider green";
+                        break;
+                    case 4:
+                        colorSlider.className = "slider yellow";
+                        break;
+                    case 5:
+                        colorSlider.className = "slider blue";
+                        break;
+                }
+            }, 200);
+            break;
     }
 }
 
