@@ -4,6 +4,33 @@ canvas.height = window.innerHeight;
 
 var c = canvas.getContext('2d');
 
+var music;
+var isMusicPlaying = false;
+
+function randSong() {
+    var songs = [
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3"
+    ];
+    return songs[Math.floor(Math.random() * songs.length)];
+}
+function manageMusic(){
+    if(isMusicPlaying)
+        music.pause();
+    else
+    {
+        music = new Audio(randSong());
+        music.play();
+    }
+    isMusicPlaying = !isMusicPlaying;
+}
+
 var mouse = {
     x: innerWidth/2,
     y: innerHeight/2
@@ -125,8 +152,12 @@ function dragTick(){
     dx = (tempX - lastX) / 5;
     createBallWithDirection(tempX, tempY, dx, 0);
     lastX = tempX;
-    console.log("test")
 };
+
+document.body.addEventListener("keypress", function(event){
+    if(event.key == 'm') 
+        manageMusic();
+});
 
 canvas.addEventListener("mousedown", function(event){
     let rect = canvas.getBoundingClientRect();
