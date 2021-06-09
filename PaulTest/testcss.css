@@ -92,3 +92,75 @@ canvas {
 .blue::-moz-range-thumb {
     background: #29A2C6; /* Green background */
 }
+
+
+
+
+ @media screen and (max-width: 1024px) {
+     .slider{
+        width: 90%; /* Full-width */
+        height: 9px; /* Specified height */
+     }
+    
+     .slider::-webkit-slider-thumb{
+        width: 16px; /* Set a specific slider handle width */
+        height: 16px; /* Slider handle height */
+     }
+
+     .slider::-moz-range-thumb {
+        width: 16px; /* Set a specific slider handle width */
+        height: 16px; /* Slider handle height */
+     }
+ }
+
+
+@media screen and (max-width: 768px) {
+    .slider{
+        width: 70%; /* Full-width */
+        height: 7px; /* Specified height */
+     }
+
+     .slider::-webkit-slider-thumb{
+        width: 13px; /* Set a specific slider handle width */
+        height: 13px; /* Slider handle height */
+     }
+
+     .slider::-moz-range-thumb {
+        width: 13px; /* Set a specific slider handle width */
+        height: 13px; /* Slider handle height */
+     }
+}
+
+@media screen and (max-width: 480px) {
+    .slider{
+        width: 50%; /* Full-width */
+        height: 5px; /* Specified height */
+     }
+
+     .slider::-webkit-slider-thumb{
+        width: 10px; /* Set a specific slider handle width */
+        height: 10px; /* Slider handle height */
+     }
+
+     .slider::-moz-range-thumb {
+        width: 10px; /* Set a specific slider handle width */
+        height: 10px; /* Slider handle height */
+     }
+}
+
+@media screen and (max-width: 330px) {
+    .slider{
+        width: 30%; /* Full-width */
+        height: 3px; /* Specified height */
+     }
+
+     .slider::-webkit-slider-thumb{
+        width: 7px; /* Set a specific slider handle width */
+        height: 7px; /* Slider handle height */
+     }
+
+     .slider::-moz-range-thumb {
+        width: 7px; /* Set a specific slider handle width */
+        height: 7px; /* Slider handle height */
+     }
+} 
