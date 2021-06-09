@@ -23,6 +23,9 @@ canvas {
     justify-content: space-between;
     margin-left: 3%;
     margin-right: 3%;
+    margin-top: 1%;
+    color: #225;
+    text-align: center;
 }
 
 .slider {
