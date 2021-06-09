@@ -17,10 +17,12 @@ canvas {
     position: absolute;
     left: 0px;
     top: 0px;
-    width: 100%;
+    width: 94%;
     z-index: 5;
     display: flex;
     justify-content: space-between;
+    margin-left: 3%;
+    margin-right: 3%;
 }
 
 .slider {

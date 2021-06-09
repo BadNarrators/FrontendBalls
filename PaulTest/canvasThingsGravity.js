@@ -17,10 +17,13 @@ var colorArray = [
     "#29A2C6"
 ];
 
-var gravity = 0.9;
-var bouncyness = 0.8;
+var gravity = 0.5;
+var bouncyness = 0.5;
 var radius = 25;
 var color = 0;
+
+var counterSize = [6, 3];
+var counterMove = false;  
 
 
 var circleArray = [];
@@ -34,7 +37,14 @@ window.addEventListener('mousemove', function(event) {
 window.addEventListener('resize', function() {
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-    init();
+    if(canvas.width < 650) {
+        counterSize = [10, 5];
+        counterMove = true;
+    }else {
+        counterSize = [6, 3];
+        counterMove = false;
+    }
+    softInit(circleArray.length);
 })
 
 //math functions for random values
@@ -149,6 +159,19 @@ function init() {
     }
 }
 
+function softInit(n) {
+
+    circleArray = [];
+    for(var i = 0; i < n; i++){
+        var x = randomIntFromRange(radius, canvas.width - radius);
+        var y = randomIntFromRange(radius, canvas.height - radius);
+        var dx = (Math.random() -0.5) * 8; //velocity of the circle and startpointX
+        var dy = (Math.random() -0.5) * 8; //velocity of the circle and startpointY
+        createBall(x, y, dx, dy)
+        
+    }
+}
+
 function animate(){
     requestAnimationFrame(animate); //this is the loop kinda
     c.clearRect(0, 0, canvas.width, canvas.height); // this refreshes
@@ -158,7 +181,8 @@ function animate(){
     }
     
     c.beginPath();
-    c.arc(canvas.width/2, -10, 70, 0, Math.PI, false);
+    if(counterMove) c.arc(canvas.width, canvas.height/2, canvas.width/100*counterSize[0], 0, Math.PI*2, false);
+    else c.arc(canvas.width/2, -10, canvas.width/100*counterSize[0], 0, Math.PI, false);
     c.closePath();
     c.lineWidth = 5;
     c.fillStyle = 'white';
@@ -166,11 +190,12 @@ function animate(){
     c.strokeStyle = '#222255';
     c.stroke();
 
-    c.lineWidth = 1;
-    c.font = "30px Arial";
+    c.lineWidth = 2;
+    c.font = canvas.width/100*counterSize[1]+"px Arial";
     c.fillStyle = "#222255";
     c.textAlign = "center";
-    c.fillText(""+circleArray.length, canvas.width/2, 30);
+    if(counterMove) c.fillText(""+circleArray.length, canvas.width - canvas.width/100*counterSize[1], canvas.height/2 + (canvas.width/100*counterSize[1]/2));
+    else c.fillText(""+circleArray.length, canvas.width/2, canvas.width/100*counterSize[1]);
 }
 
 var rainbowInterval = setInterval(function(){
