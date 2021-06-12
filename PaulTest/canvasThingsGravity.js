@@ -6,6 +6,7 @@ var c = canvas.getContext('2d');
 
 var music;
 var isMusicPlaying = false;
+var showControls = 10;
 
 function randSong() {
     var songs = [
@@ -30,6 +31,10 @@ function manageMusic(){
     }
     isMusicPlaying = !isMusicPlaying;
 }
+
+var controlsInterval = setInterval(function(){
+    showControls -= 0.2;
+}, 100)
 
 var mouse = {
     x: innerWidth/2,
@@ -61,7 +66,7 @@ window.addEventListener('mousemove', function(event) {
     mouse.y = event.clientY;
 })
 
-window.addEventListener('resize', function() {
+function manageResolution() {
     canvas.width = innerWidth;
     canvas.height = innerHeight;
     if(canvas.width < 650) {
@@ -72,7 +77,9 @@ window.addEventListener('resize', function() {
         counterMove = false;
     }
     softInit(circleArray.length);
-})
+}
+
+window.addEventListener('resize', manageResolution)
 
 //math functions for random values
 function randomIntFromRange(min,max) {
@@ -227,7 +234,19 @@ function animate(){
     c.textAlign = "center";
     if(counterMove) c.fillText(""+circleArray.length, canvas.width - canvas.width/100*counterSize[1], canvas.height/2 + (canvas.width/100*counterSize[1]/2));
     else c.fillText(""+circleArray.length, canvas.width/2, canvas.width/100*counterSize[1]);
+
+    if(showControls>0){
+        c.globalAlpha = showControls/10;
+        c.lineWidth = 2;
+        c.font = canvas.width/100*counterSize[1]+"px Arial";
+        c.fillStyle = "#222255";
+        c.textAlign = "center";
+        if(counterMove) c.fillText("Press M to play/stop music", canvas.width/2, canvas.height/100*98);
+        else c.fillText("Press M to play/stop music", canvas.width/100*81, canvas.height/100*98);
+        c.globalAlpha = 1;
+    }else clearInterval(controlsInterval)
 }
+
 
 var rainbowInterval = setInterval(function(){
     let n = Math.round(Math.random()*4+1);
@@ -314,6 +333,8 @@ colorSlider.oninput = function(){
             break;
     }
 }
+
+manageResolution();
 
 animate();
 init();
