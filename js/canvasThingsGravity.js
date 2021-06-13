@@ -164,6 +164,8 @@ function dragTick(){
 document.body.addEventListener("keypress", function(event){
     if(event.key == 'm') 
         manageMusic();
+    else if (event.key == "Enter")
+        softInit(15000)
 });
 
 canvas.addEventListener("mousedown", function(event){
@@ -202,7 +204,7 @@ function softInit(n) {
     circleArray = [];
     for(var i = 0; i < n; i++){
         var x = randomIntFromRange(radius, canvas.width - radius);
-        var y = randomIntFromRange(radius, canvas.height - radius);
+        var y = randomIntFromRange(radius + 10, canvas.height - radius);
         var dx = (Math.random() -0.5) * 8; //velocity of the circle and startpointX
         var dy = (Math.random() -0.5) * 8; //velocity of the circle and startpointY
         createBall(x, y, dx, dy)
