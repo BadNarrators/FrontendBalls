@@ -61,47 +61,34 @@ The project contains html, css and javascript files:
 -'FrontendBalls/PaulTest/style/test.css', in the 'style' there are all the .css files
 
 
-<!-- Features delivered
+Features delivered
 -----------------------------------
 	First page:
 	-----------------------------------
-	In the first page we wanted to show a random animation that starts immediately when we join the page. 
+	In the first page we wanted to show a random animation that starts immediately when we join the page. The main feature of this page is "the magnet".
+	This function will catch all the balls that the mouse encounters (in a specific range around the pointer) when we click and drag. When we release the click, the magnet animation will stop and the balls will returno slowly on their path.
 
 	Second page:
 	-----------------------------------
-	This area contains an application form to gather information from future
-	astronaut candidates:
-	- First, middle (optional) and last names
-	- Desired mission
-	- Age, gender, hair and eye color (color picker or choose from a list)
-	- Contact information: email, phone numbers, address, etc
-	- Weight (max 100kg)
-	- A shot biography (max 255 characters)
-	- Another text area for any other info the user wants to share	
+	This page is more complex than the other, due the multiple animations implemented.
+	Here we can find 4 sliders at the top of the page, each one with his specific function.
+	The first one controls the gravity of the the balls.
+	The second one controls the bouncyness of the ball.
+	Those 2 sliders, with the right combination, can offer different animations and with a specific combination of gravity, bouncyness and the way the balls are thrown we can invert the gravity from Y axys to X axys.
+	The third slider lets the users choose the size of the radius of the balls between a max and min.
+	The fourth and last slider will allow the users to change the color of the balls in 6 different ways:
+	- random color
+	- pink
+	- orange
+	- green
+	- yellow
+	- blue
 
-	Astrounauts:
-	-----------------------------------
-	For this page we developed a list of 21 astronauts grouped in 2 sections: retired and active. Each astronaut has a name, code, bio, photo, age, nationality, years of experience and links to missions in which he has participated. The main feature of this page are the astronaut cards, which contain not only their photo, but also all the information that we mentioned before hided by a simple and effective animation.
+	On this page, at the start we have a function that spawns a specific amount of balls randomly (50 in our case). The user can also interact with the page with the click and drag action that will allow him to spawn multiple balls depending on how long the drag occurs. The balls spawn is also influenced by the speed that the mouse has when it moves, therefore if we click and drag at a slow speed, the balls will spawn with a minimum speed, else, the balls will inherit a higher speed depending on how quick we move the mouse.
 
-	Missions:
-	-----------------------------------
-	Has 3 sections: Future, Current, Past. Each missions contains all the most important information of it. The navigation bar will be fixed to make easier to navigate in the page for the user.
-
-
-	News Page:
-	-----------------------------------
-	There 4 types of news so there are 4 sections: Most Relevant, New Discovery, Space Teams, Latest News.
-	For each news the can read the title, the pubblication date and the content.
-
-
-	Gallery:
-	-----------------------------------
-	This page shows an image big as the screen, here the user can switch the image showed on the page by clicking on one of the image in the slider or clicking one of the two arrows.
-
-
-	About us:
-	-----------------------------------
-	This section includes some information about the agency, what it does, its history and any other relevant information like socials. -->
+	The pages have an arrow button to navigate through eachother.
+	We also added a function to the Gravity page that triggers the music to start and stop by pressing the "m" key. In the other page, we implemented the same "m" key for the music and we also brougth a pause button triggered by the "p" key which will freeze or resume the animation.
+	
 
 Bonuses delivered
 -----------------------------------
