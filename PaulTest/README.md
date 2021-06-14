@@ -63,11 +63,11 @@ The project contains html, css and javascript files:
 
 <!-- Features delivered
 -----------------------------------
-	Homepage:
+	First page:
 	-----------------------------------
-	The hompage is the key page to our website and we wanted to deliver an amazing experience as soon as the user enters our website. Its main feature is the video in the background. We also added a hamburger menu that displays only on toggle, so the user can enjoy the full screen experience of the video. We also have an expolre button that connects the main page to some news. We wanted to keep the main page as simple as possible and not overload the users with usless information from the main page and confuse them. Last but not least we added our social links and the logo of the company.
+	In the first page we wanted to show a random animation that starts immediately when we join the page. 
 
-	Join us:
+	Second page:
 	-----------------------------------
 	This area contains an application form to gather information from future
 	astronaut candidates:
