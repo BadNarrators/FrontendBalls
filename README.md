@@ -56,9 +56,9 @@ Files and project structure
 -----------------------------------
 The project contains html, css and javascript files:
 
--'FrontendBalls/PaulTest/withGravity.html', in the root folder there are all the .html files
--'FrontendBalls/PaulTest/js/canvasThingsGravity.js', in the 'js' there are all the .js files
--'FrontendBalls/PaulTest/style/test.css', in the 'style' there are all the .css files
+-'FrontendBalls/withGravity.html', in the root folder there are all the .html files
+-'FrontendBalls/js/gravityScript.js', in the 'js' there are all the .js files
+-'FrontendBalls/style/style.css', in the 'style' there are all the .css files
 
 
 Features delivered
